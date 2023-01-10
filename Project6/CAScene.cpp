@@ -69,7 +69,7 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	foreArmL = new CABalljoint(0.4f);
 	foreArmL->createBuffers(vulkan);
 	armL->addChild(foreArmL);
-	foreArmL->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	foreArmL->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	foreArmL->setLight(light);
 
 	armR = new CABalljoint(0.4f);
@@ -154,9 +154,11 @@ void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, 
 //
 void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
-	Sleep(60);
+	//Sleep(40);
 	angle += 1.0f;
 	if (angle >= 90.0f) angle = -90.0f;
+	armL->setPose(0.0f, -angle, 0.0f);
+	foreArmL->setPose(angle, 0.0f, 0.0f);
 	legL->setPose(0.0f, angle, 0.0f);
 	legR->setPose(0.0f, -angle, 0.0f);
 

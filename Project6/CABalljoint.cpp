@@ -1,6 +1,7 @@
 #include "CABalljoint.h"
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
+#include <malloc.h>
 
 //
 // FUNCIÓN: CABalljoint::CABalljoint()
@@ -22,7 +23,8 @@ CABalljoint::CABalljoint(float l)
 
 	matrizpadre = glm::mat4(1.0f);
 
-	hijo = nullptr;
+	numhijos = 0;
+	hijos=NULL;
 }
 
 glm::mat4 CABalljoint::getFatherLocationMatrix() {
@@ -97,41 +99,32 @@ void CABalljoint::ComputeMatrix()
 	posem[2][3] = 0;
 	posem[3][3] = 1;
 
-	glm::mat4 matrix = jointm * posem;
+	glm::mat4 matrix = matrizpadre * jointm * posem;
 
 	joint->setLocation(matrix);
 	glm::mat4 mm = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length/2));
 	bone->setLocation(mm);
-	//guardamos en *matrizpadre* la matriz del padre posicionada al final del hueso del padre
-	matrizpadre = glm::translate(matrix, glm::vec3(0.0f, length, 0.0f));
+	//guardamos en *mchild* la matriz del padre posicionada al final del hueso del padre
+	glm::mat4 mchild = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length));
+	if (hijos!=nullptr)
+	{
+		hijos[numhijos]->SetMatrix(mchild);
+	}
+
 }
 
 void CABalljoint::SetMatrix(glm::mat4 matrix) {
-	hijo->right.x = matrix[0][0];
-	hijo->right.y = matrix[0][1];
-	hijo->right.z = matrix[0][2];
-
-	hijo->up.x = matrix[1][0];
-	hijo->up.y = matrix[1][1];
-	hijo->up.z = matrix[1][2];
-
-	hijo->dir.x = matrix[2][0];
-	hijo->dir.y = matrix[2][1];
-	hijo->dir.z = matrix[2][2];
-
-	hijo->location.x = matrix[3][0];
-	hijo->location.y = matrix[3][1];
-	hijo->location.z = matrix[3][2];
-
-	hijo->ComputeMatrix();
+	
+	matrizpadre = matrix;
+	ComputeMatrix();
 }
 
 void CABalljoint::addChild(CABalljoint* child) {
-	hijo = child;
-	if (hijo!=NULL)
-	{
-		SetMatrix(this->getFatherLocationMatrix());
-	}
+	CABalljoint** nueva = (CABalljoint **) malloc((numhijos + 1) * sizeof(CABalljoint*));
+	for (int i = 0; i < numhijos; i++) nueva[i] = hijos[i];
+	nueva[numhijos] = child;
+	hijos = nueva;
+	numhijos++;
 }
 
 //

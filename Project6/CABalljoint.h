@@ -22,11 +22,10 @@ private:
 	GLfloat angles[3];
 	CASphere* joint;
 	CACylinder* bone;
-	CABalljoint* hijo;
+	int numhijos;
+	CABalljoint **hijos;//tiene que ser una lista de hijos
 	void ComputeMatrix();
-	void SetMatrix(glm::mat4 matrix);
 	
-	//guardar matriz del padre
 public:
 	CABalljoint(float length);
 	~CABalljoint();
@@ -41,6 +40,8 @@ public:
 	void setOrientation(glm::vec3 nDir, glm::vec3 nUp);
 	void setPose(float xrot, float yrot, float zrot);
 
+	void SetMatrix(glm::mat4 matrix);
+	//guardar matriz del padre
 	void addChild(CABalljoint *child);
 };
 
