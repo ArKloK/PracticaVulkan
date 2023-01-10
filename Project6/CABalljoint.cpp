@@ -108,7 +108,7 @@ void CABalljoint::ComputeMatrix()
 	glm::mat4 mchild = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length));
 	if (hijos!=nullptr)
 	{
-		hijos[numhijos]->SetMatrix(mchild);
+		hijos[0]->SetMatrix(mchild);
 	}
 
 }
