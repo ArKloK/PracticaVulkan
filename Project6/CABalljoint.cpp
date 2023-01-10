@@ -25,6 +25,10 @@ CABalljoint::CABalljoint(float l)
 	hijo = nullptr;
 }
 
+glm::mat4 CABalljoint::getFatherLocationMatrix() {
+	return matrizpadre;
+}
+
 //
 // FUNCIÓN: CABalljoint::~CABalljoint()
 //
@@ -96,12 +100,38 @@ void CABalljoint::ComputeMatrix()
 	glm::mat4 matrix = jointm * posem;
 
 	joint->setLocation(matrix);
-	glm::mat4 mm = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length / 2));
+	glm::mat4 mm = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length/2));
 	bone->setLocation(mm);
+	//guardamos en *matrizpadre* la matriz del padre posicionada al final del hueso del padre
+	matrizpadre = glm::translate(matrix, glm::vec3(0.0f, length, 0.0f));
 }
 
-void SetMatrix(glm::mat4 matrix) {
+void CABalljoint::SetMatrix(glm::mat4 matrix) {
+	hijo->right.x = matrix[0][0];
+	hijo->right.y = matrix[0][1];
+	hijo->right.z = matrix[0][2];
 
+	hijo->up.x = matrix[1][0];
+	hijo->up.y = matrix[1][1];
+	hijo->up.z = matrix[1][2];
+
+	hijo->dir.x = matrix[2][0];
+	hijo->dir.y = matrix[2][1];
+	hijo->dir.z = matrix[2][2];
+
+	hijo->location.x = matrix[3][0];
+	hijo->location.y = matrix[3][1];
+	hijo->location.z = matrix[3][2];
+
+	hijo->ComputeMatrix();
+}
+
+void CABalljoint::addChild(CABalljoint* child) {
+	hijo = child;
+	if (hijo!=NULL)
+	{
+		SetMatrix(this->getFatherLocationMatrix());
+	}
 }
 
 //

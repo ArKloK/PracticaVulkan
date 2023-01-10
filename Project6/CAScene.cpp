@@ -5,6 +5,8 @@
 #include "CAGround.h"
 #include "CABalljoint.h"
 #include <iostream>
+#include <Windows.h>
+#include <stdio.h>
 
 //
 // FUNCIÓN: CAScene::CAScene(CAVulkanState* vulkan)
@@ -61,13 +63,19 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	armL = new CABalljoint(0.4f);
 	armL->createBuffers(vulkan);
 	armL->setLocation(glm::vec3(0.25f, 1.9f, 0.0f));
-	armL->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	armL->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	armL->setLight(light);
+
+	foreArmL = new CABalljoint(0.4f);
+	foreArmL->createBuffers(vulkan);
+	armL->addChild(foreArmL);
+	foreArmL->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	foreArmL->setLight(light);
 
 	armR = new CABalljoint(0.4f);
 	armR->createBuffers(vulkan);
 	armR->setLocation(glm::vec3(-0.25f, 1.9f, 0.0f));
-	armR->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	armR->setOrientation(glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	armR->setLight(light);
 
 	legL = new CABalljoint(0.8f);
@@ -96,6 +104,7 @@ CAScene::~CAScene()
 	delete column;
 	delete cross;
 	delete armL;
+	delete foreArmL;
 	delete armR;
 	delete pelvis;
 	delete legL;
@@ -117,6 +126,7 @@ void CAScene::destroyBuffers(CAVulkanState* vulkan)
 	pelvis->destroyBuffers(vulkan);
 	legL->destroyBuffers(vulkan);
 	legR->destroyBuffers(vulkan);
+	foreArmL->destroyBuffers(vulkan);
 }
 
 //
@@ -134,6 +144,7 @@ void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, 
 	pelvis->addCommands(vulkan, commandBuffer, index);
 	legL->addCommands(vulkan, commandBuffer, index);
 	legR->addCommands(vulkan, commandBuffer, index);
+	foreArmL->addCommands(vulkan, commandBuffer, index);
 }
 
 //
@@ -143,10 +154,9 @@ void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, 
 //
 void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
+	Sleep(60);
 	angle += 1.0f;
 	if (angle >= 90.0f) angle = -90.0f;
-	armL->setPose(0.0f, angle, 0.0f);
-	armR->setPose(0.0f, -angle, 0.0f);
 	legL->setPose(0.0f, angle, 0.0f);
 	legR->setPose(0.0f, -angle, 0.0f);
 
@@ -158,4 +168,5 @@ void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view,
 	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	legL->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	legR->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	foreArmL->updateDescriptorSets(vulkan, imageIndex, view, projection);
 }

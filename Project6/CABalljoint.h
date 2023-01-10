@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 #include "CASphere.h"
 #include "CACylinder.h"
 #include <glm\glm.hpp>
@@ -20,9 +22,10 @@ private:
 	GLfloat angles[3];
 	CASphere* joint;
 	CACylinder* bone;
+	CABalljoint* hijo;
 	void ComputeMatrix();
 	void SetMatrix(glm::mat4 matrix);
-	CABalljoint *hijo;
+	
 	//guardar matriz del padre
 public:
 	CABalljoint(float length);
@@ -32,6 +35,7 @@ public:
 	void addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, int index);
 	void updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection);
 
+	glm::mat4 getFatherLocationMatrix();
 	void setLight(CALight l);
 	void setLocation(glm::vec3 loc);
 	void setOrientation(glm::vec3 nDir, glm::vec3 nUp);

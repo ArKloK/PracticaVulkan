@@ -18,6 +18,7 @@ private:
 	CAFigure* cross;
 	CAFigure* pelvis;
 	CABalljoint* armL;
+	CABalljoint* foreArmL;
 	CABalljoint* armR;
 	CABalljoint* legL;
 	CABalljoint* legR;
