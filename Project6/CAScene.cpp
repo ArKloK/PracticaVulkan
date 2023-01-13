@@ -39,7 +39,11 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	blueMat.Ks = glm::vec3(0.8f, 0.8f, 0.8f);
 	blueMat.Shininess = 16.0f;
 
-	column = new CACylinder(2, 10, 0.05f, 0.5f);
+	skeleton = new Skeleton(vulkan);
+	skeleton->resetLocation();
+	skeleton->translate(glm::vec3(0.0f, 1.0f, 0.0f));
+
+	/*column = new CACylinder(2, 10, 0.05f, 0.5f);
 	column->createBuffers(vulkan);
 	column->translate(glm::vec3(0.0f, 1.5f, 0.0f));
 	column->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -88,7 +92,7 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	legR->createBuffers(vulkan);
 	legR->setLocation(glm::vec3(-0.25f, 1, 0.0f));
 	legR->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	legR->setLight(light);
+	legR->setLight(light);*/
 
 	angle = 0.0;
 }
@@ -101,14 +105,15 @@ CAScene::CAScene(CAVulkanState* vulkan)
 CAScene::~CAScene()
 {
 	delete ground;
-	delete column;
+	delete skeleton;
+	/*delete column;
 	delete cross;
 	delete armL;
 	delete foreArmL;
 	delete armR;
 	delete pelvis;
 	delete legL;
-	delete legR;
+	delete legR;*/
 }
 
 //
@@ -119,14 +124,15 @@ CAScene::~CAScene()
 void CAScene::destroyBuffers(CAVulkanState* vulkan)
 {
 	ground->destroyBuffers(vulkan);
-	column->destroyBuffers(vulkan);
+	skeleton->destroyBuffers(vulkan);
+	/*column->destroyBuffers(vulkan);
 	cross->destroyBuffers(vulkan);
 	armL->destroyBuffers(vulkan);
 	armR->destroyBuffers(vulkan);
 	pelvis->destroyBuffers(vulkan);
 	legL->destroyBuffers(vulkan);
 	legR->destroyBuffers(vulkan);
-	foreArmL->destroyBuffers(vulkan);
+	foreArmL->destroyBuffers(vulkan);*/
 }
 
 //
@@ -137,14 +143,15 @@ void CAScene::destroyBuffers(CAVulkanState* vulkan)
 void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, int index)
 {
 	ground->addCommands(vulkan, commandBuffer, index);
-	column->addCommands(vulkan, commandBuffer, index);
+	skeleton->addCommands(vulkan, commandBuffer, index);
+	/*column->addCommands(vulkan, commandBuffer, index);
 	cross->addCommands(vulkan, commandBuffer, index);
 	armL->addCommands(vulkan, commandBuffer, index);
 	armR->addCommands(vulkan, commandBuffer, index);
 	pelvis->addCommands(vulkan, commandBuffer, index);
 	legL->addCommands(vulkan, commandBuffer, index);
 	legR->addCommands(vulkan, commandBuffer, index);
-	foreArmL->addCommands(vulkan, commandBuffer, index);
+	foreArmL->addCommands(vulkan, commandBuffer, index);*/
 }
 
 //
@@ -155,14 +162,15 @@ void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, 
 void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
 	//Sleep(40);
-	angle += 1.0f;
-	if (angle >= 90.0f) angle = -90.0f;
-	armL->setPose(0.0f, -angle, 0.0f);
+
+	ground->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	skeleton->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	/*armL->setPose(0.0f, -angle, 0.0f);
 	foreArmL->setPose(angle, 0.0f, 0.0f);
 	legL->setPose(0.0f, angle, 0.0f);
 	legR->setPose(0.0f, -angle, 0.0f);
 
-	ground->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	
 	column->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	cross->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	armL->updateDescriptorSets(vulkan, imageIndex, view, projection);
@@ -170,5 +178,5 @@ void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view,
 	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	legL->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	legR->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	foreArmL->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	foreArmL->updateDescriptorSets(vulkan, imageIndex, view, projection);*/
 }

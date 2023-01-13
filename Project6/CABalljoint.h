@@ -23,7 +23,7 @@ private:
 	CASphere* joint;
 	CACylinder* bone;
 	int numhijos;
-	CABalljoint **hijos;//tiene que ser una lista de hijos
+	CABalljoint **hijos;//Lista de hijos
 	void ComputeMatrix();
 	
 public:

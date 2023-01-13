@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CAVulkanState.h"
+#include "Skeleton.h"
 #include "CAFigure.h"
 #include "CABalljoint.h"
 
@@ -14,14 +15,15 @@ public:
 
 private:
 	CAFigure* ground;
-	CAFigure* column;
+	Skeleton* skeleton;
+	/*CAFigure* column;
 	CAFigure* cross;
 	CAFigure* pelvis;
 	CABalljoint* armL;
 	CABalljoint* foreArmL;
 	CABalljoint* armR;
 	CABalljoint* legL;
-	CABalljoint* legR;
+	CABalljoint* legR;*/
 	float angle;
 };
 

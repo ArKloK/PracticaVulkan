@@ -48,6 +48,9 @@
     <ClCompile Include="CABalljoint.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Tools\GLFW\include\vulkan\vk_platform.h">
       <Filter>Archivos de recursos</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

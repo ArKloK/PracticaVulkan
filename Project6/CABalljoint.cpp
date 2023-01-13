@@ -106,11 +106,14 @@ void CABalljoint::ComputeMatrix()
 	bone->setLocation(mm);
 	//guardamos en *mchild* la matriz del padre posicionada al final del hueso del padre
 	glm::mat4 mchild = glm::translate(matrix, glm::vec3(0.0f, 0.0f, length));
+
 	if (hijos!=nullptr)
 	{
-		hijos[0]->SetMatrix(mchild);
+		for (int i = 0; i < numhijos; i++)
+		{
+			hijos[i]->SetMatrix(mchild);
+		}
 	}
-
 }
 
 void CABalljoint::SetMatrix(glm::mat4 matrix) {
