@@ -41,7 +41,7 @@ CAScene::CAScene(CAVulkanState* vulkan)
 
 	skeleton = new Skeleton(vulkan);
 	skeleton->resetLocation();
-	skeleton->translate(glm::vec3(0.0f, 1.0f, 0.0f));
+	skeleton->translate(glm::vec3(0.0f, 1.05f, 0.0f));
 
 	/*column = new CACylinder(2, 10, 0.05f, 0.5f);
 	column->createBuffers(vulkan);

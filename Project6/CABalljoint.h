@@ -34,6 +34,8 @@ public:
 	void addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, int index);
 	void updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection);
 
+	glm::vec3 getLocation();
+
 	glm::mat4 getFatherLocationMatrix();
 	void setLight(CALight l);
 	void setLocation(glm::vec3 loc);

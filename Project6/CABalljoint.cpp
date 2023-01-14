@@ -173,6 +173,11 @@ void CABalljoint::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageInde
 	bone->updateDescriptorSets(vulkan, imageIndex, view, projection);
 }
 
+glm::vec3 CABalljoint::getLocation()
+{
+	return location;
+}
+
 //
 // FUNCIÓN: CABalljoint::destroyBuffers(CAVulkanState* vulkan)
 //

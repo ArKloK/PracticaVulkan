@@ -4,6 +4,8 @@
 #include "CAFigure.h";
 #include "CABalljoint.h";
 #include <glm/glm.hpp>
+#include <iostream>  
+#include <windows.h> 
 
 
 class Skeleton
