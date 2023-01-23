@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="CAApplication.cpp" />
     <ClCompile Include="CABalljoint.cpp" />
     <ClCompile Include="CACamera.cpp" />
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Tools\GLFW\include\vulkan\vk_platform.h" />
     <ClInclude Include="..\..\..\Tools\GLFW\include\vulkan\vulkan.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="CAApplication.h" />
     <ClInclude Include="CABalljoint.h" />
     <ClInclude Include="CACamera.h" />

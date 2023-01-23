@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "CASphere.h"
 #include "CACylinder.h"
 #include <glm\glm.hpp>

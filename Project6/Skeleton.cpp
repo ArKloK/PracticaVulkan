@@ -10,12 +10,12 @@ Skeleton::Skeleton(CAVulkanState* vulkan) {
 	light.Ld = glm::vec3(0.8f, 0.8f, 0.8f);
 	light.Ls = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	pelvis = new CABalljoint(0.3f);
+	pelvis = new CABalljoint(0.4f);
 	pelvis->createBuffers(vulkan);
 	pelvis->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	pelvis->setLight(light);
 
-		spine = new CABalljoint(0.4f);
+		spine = new CABalljoint(0.5f);
 		spine->createBuffers(vulkan);
 		pelvis->addChild(spine);
 		spine->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -38,6 +38,7 @@ Skeleton::Skeleton(CAVulkanState* vulkan) {
 				shoulder_l->createBuffers(vulkan);
 				clavicle_l->addChild(shoulder_l);
 				shoulder_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				shoulder_l->setPose(45, 0, 0);
 				shoulder_l->setLight(light);
 
 					elbow_l = new CABalljoint(0.3f);
@@ -63,6 +64,7 @@ Skeleton::Skeleton(CAVulkanState* vulkan) {
 				shoulder_r->createBuffers(vulkan);
 				clavicle_r->addChild(shoulder_r);
 				shoulder_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+				shoulder_r->setPose(45, 0, 0);
 				shoulder_r->setLight(light);
 
 					elbow_r = new CABalljoint(0.3f);
@@ -232,15 +234,6 @@ void Skeleton::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer,
 
 void Skeleton::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
-	Sleep(10);
-	angle++;
-	if (angle>=90)
-	{
-		angle = 0;
-	}
-
-	//pelvis->setPose(angle, 0, 0);
-
 	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	spine->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	neck->updateDescriptorSets(vulkan, imageIndex, view, projection);

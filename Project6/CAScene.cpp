@@ -3,6 +3,7 @@
 #include "CACylinder.h"
 #include "CASphere.h"
 #include "CAGround.h"
+#include "Animation.h"
 #include "CABalljoint.h"
 #include <iostream>
 #include <Windows.h>

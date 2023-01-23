@@ -17,6 +17,11 @@ CAModel::CAModel(CAVulkanState* vulkan)
 	this->vulkan = vulkan;
 
 	this->camera = new CACamera();
+	//Camara de lado
+	//this->camera->setPosition(glm::vec3(12.0f, 1.0f, 0.0f));
+	//this->camera->setDirection(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	//Camara frontal
 	this->camera->setPosition(glm::vec3(0.0f, 1.0f, 10.0f));
 	this->camera->setMoveStep(0.0f);
 

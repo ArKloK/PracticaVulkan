@@ -4,6 +4,7 @@
 #include "Skeleton.h"
 #include "CAFigure.h"
 #include "CABalljoint.h"
+#include "Animation.h"
 
 class CAScene {
 public:
