@@ -1,6 +1,7 @@
 #pragma once
+
 #include "CAFigure.h"
-#include "Skeleton.h"
+#include "CASkeleton.h"
 #include <glm/glm.hpp>
 #include <iostream>  
 #include <windows.h> 
@@ -48,6 +49,6 @@ private:
 
 public:
 	Animation();
-	void Animar();
+	void Animar(void * skl);
 };
 

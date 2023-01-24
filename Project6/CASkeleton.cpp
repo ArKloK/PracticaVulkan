@@ -1,184 +1,256 @@
 #include "CASkeleton.h"
-#include "CAVertex.h"
-#include "CATransform.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
-//
-// FUNCIÓN: CAFigure::createBuffers(CAVulkanState* vulkan)
-//
-// PROPÓSITO: Crea el Vertex Buffer
-//
-void CASkeleton::createBuffers(CAVulkanState* vulkan)
-{
-	size_t vertexSize = sizeof(CAVertex) * vertices.size();
-	vulkan->createBuffer(&vertexBuffer, &vertexBufferMemory, vertexSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+CASkeleton::CASkeleton(CAVulkanState* vulkan) {
 
-	void* data;
-	vkMapMemory(vulkan->device, vertexBufferMemory, 0, vertexSize, 0, &data);
-	memcpy(data, vertices.data(), vertexSize);
-	vkUnmapMemory(vulkan->device, vertexBufferMemory);
+	CALight light = {};
+	light.Ldir = glm::normalize(glm::vec3(1.0f, -0.8f, -0.7f));
+	light.La = glm::vec3(0.2f, 0.2f, 0.2f);
+	light.Ld = glm::vec3(0.8f, 0.8f, 0.8f);
+	light.Ls = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	size_t indexSize = sizeof(indices[0]) * indices.size();
-	vulkan->createBuffer(&indexBuffer, &indexBufferMemory, indexSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+	pelvis = new CABalljoint(0.4f);
+	pelvis->createBuffers(vulkan);
+	pelvis->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	pelvis->setLight(light);
 
-	void* indexData;
-	vkMapMemory(vulkan->device, indexBufferMemory, 0, indexSize, 0, &indexData);
-	memcpy(indexData, indices.data(), indexSize);
-	vkUnmapMemory(vulkan->device, indexBufferMemory);
+		spine = new CABalljoint(0.5f);
+		spine->createBuffers(vulkan);
+		pelvis->addChild(spine);
+		spine->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		spine->setLight(light);
 
-	size_t transformBufferSize = sizeof(CATransform);
-	transformBuffers.resize(vulkan->imageCount);
-	transformBuffersMemory.resize(vulkan->imageCount);
+			neck = new CABalljoint(0.35f);
+			neck->createBuffers(vulkan);
+			spine->addChild(neck);
+			neck->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			neck->setLight(light);
 
-	size_t lightBufferSize = sizeof(CALight);
-	lightBuffers.resize(vulkan->imageCount);
-	lightBuffersMemory.resize(vulkan->imageCount);
+			clavicle_l = new CABalljoint(0.25f);
+			clavicle_l->createBuffers(vulkan);
+			spine->addChild(clavicle_l);
+			clavicle_l->setLocation((clavicle_l->getLocation()+glm::vec3(-0.05f, 0.0f, -0.05f)));//translado location acorde al offset dado
+			clavicle_l->setOrientation(glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			clavicle_l->setLight(light);
 
-	size_t materialBufferSize = sizeof(CAMaterial);
-	materialBuffers.resize(vulkan->imageCount);
-	materialBuffersMemory.resize(vulkan->imageCount);
+				shoulder_l = new CABalljoint(0.35f);
+				shoulder_l->createBuffers(vulkan);
+				clavicle_l->addChild(shoulder_l);
+				shoulder_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				shoulder_l->setPose(45, 0, 0);
+				shoulder_l->setLight(light);
 
-	for (size_t i = 0; i < vulkan->imageCount; i++)
-	{
-		vulkan->createBuffer(&transformBuffers[i], &transformBuffersMemory[i], transformBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-		vulkan->createBuffer(&lightBuffers[i], &lightBuffersMemory[i], lightBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-		vulkan->createBuffer(&materialBuffers[i], &materialBuffersMemory[i], materialBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-	}
+					elbow_l = new CABalljoint(0.3f);
+					elbow_l->createBuffers(vulkan);
+					shoulder_l->addChild(elbow_l);
+					elbow_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					elbow_l->setLight(light);
 
-	VkBuffer* buffers[] = { transformBuffers.data(), lightBuffers.data(), materialBuffers.data() };
-	size_t sizes[] = { transformBufferSize, lightBufferSize, materialBufferSize };
+						wrist_l = new CABalljoint(0.2f);
+						wrist_l->createBuffers(vulkan);
+						elbow_l->addChild(wrist_l);
+						wrist_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+						wrist_l->setLight(light);
 
-	descriptorSets.resize(vulkan->imageCount);
-	vulkan->createDescriptorSets(&descriptorPool, &descriptorSets, buffers, sizes, 3);
+			clavicle_r = new CABalljoint(0.25f);
+			clavicle_r->createBuffers(vulkan);
+			spine->addChild(clavicle_r);
+			clavicle_r->setLocation((clavicle_r->getLocation() + glm::vec3(0.05f, 0.0f, -0.05f)));//translado location acorde al offset dado
+			clavicle_r->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			clavicle_r->setLight(light);
+
+				shoulder_r = new CABalljoint(0.35f);
+				shoulder_r->createBuffers(vulkan);
+				clavicle_r->addChild(shoulder_r);
+				shoulder_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+				shoulder_r->setPose(45, 0, 0);
+				shoulder_r->setLight(light);
+
+					elbow_r = new CABalljoint(0.3f);
+					elbow_r->createBuffers(vulkan);
+					shoulder_r->addChild(elbow_r);
+					elbow_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					elbow_r->setLight(light);
+
+						wrist_r = new CABalljoint(0.2f);
+						wrist_r->createBuffers(vulkan);
+						elbow_r->addChild(wrist_r);
+						wrist_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+						wrist_r->setLight(light);
+
+	hip_l = new CABalljoint(0.2f);
+	hip_l->createBuffers(vulkan);
+	hip_l->setLocation(glm::vec3(0.05f, -0.05f, 0.0f));
+	hip_l->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	hip_l->setLight(light);
+
+		leg_l = new CABalljoint(0.5f);
+		leg_l->createBuffers(vulkan);
+		hip_l->addChild(leg_l);
+		leg_l->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+		leg_l->setLight(light);
+
+			knee_l = new CABalljoint(0.4f);
+			knee_l->createBuffers(vulkan);
+			leg_l->addChild(knee_l);
+			knee_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			knee_l->setLight(light);
+
+				ankle_l = new CABalljoint(0.25f);
+				ankle_l->createBuffers(vulkan);
+				knee_l->addChild(ankle_l);
+				ankle_l->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+				ankle_l->setLight(light);
+
+	hip_r = new CABalljoint(0.2f);
+	hip_r->createBuffers(vulkan);
+	hip_r->setLocation(glm::vec3(-0.05f, -0.05f, 0.0f));
+	hip_r->setOrientation(glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	hip_r->setLight(light);
+
+		leg_r = new CABalljoint(0.5f);
+		leg_r->createBuffers(vulkan);
+		hip_r->addChild(leg_r);
+		leg_r->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		leg_r->setLight(light);
+
+			knee_r = new CABalljoint(0.4f);
+			knee_r->createBuffers(vulkan);
+			leg_r->addChild(knee_r);
+			knee_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			knee_r->setLight(light);
+
+				ankle_r = new CABalljoint(0.25f);
+				ankle_r->createBuffers(vulkan);
+				knee_r->addChild(ankle_r);
+				ankle_r->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+				ankle_r->setLight(light);
+
+	angle = 0;
 }
 
-//
-// FUNCIÓN: CAFigure::destroyBuffers(VkDevice device)
-//
-// PROPÓSITO: Libera los buffers de la figura
-//
-void CASkeleton::destroyBuffers(CAVulkanState* vulkan)
+CASkeleton::~CASkeleton()
 {
-	vkDestroyBuffer(vulkan->device, vertexBuffer, nullptr);
-	vkFreeMemory(vulkan->device, vertexBufferMemory, nullptr);
+	delete pelvis;
+	delete spine;
+	delete neck;
+	delete hip_l;
+	delete leg_l;
+	delete knee_l;
+	delete ankle_l;
+	delete hip_r;
+	delete leg_r;
+	delete knee_r;
+	delete ankle_r;
+	delete clavicle_l;
+	delete shoulder_l;
+	delete elbow_l;
+	delete wrist_l;
+	delete clavicle_r;
+	delete shoulder_r;
+	delete elbow_r;
+	delete wrist_r;
 
-	vkDestroyBuffer(vulkan->device, indexBuffer, nullptr);
-	vkFreeMemory(vulkan->device, indexBufferMemory, nullptr);
-
-	for (size_t i = 0; i < vulkan->imageCount; i++)
-	{
-		vkDestroyBuffer(vulkan->device, transformBuffers[i], nullptr);
-		vkFreeMemory(vulkan->device, transformBuffersMemory[i], nullptr);
-
-		vkDestroyBuffer(vulkan->device, lightBuffers[i], nullptr);
-		vkFreeMemory(vulkan->device, lightBuffersMemory[i], nullptr);
-
-		vkDestroyBuffer(vulkan->device, materialBuffers[i], nullptr);
-		vkFreeMemory(vulkan->device, materialBuffersMemory[i], nullptr);
-	}
 }
 
-//
-// FUNCIÓN: CAFigure::addCommands(VkCommandBuffer commandBuffer, int index)
-//
-// PROPÓSITO: Añade los comandos de renderizado al command buffer
-//
-void CASkeleton::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, int index)
-{
-	VkDeviceSize offset = 0;
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, &offset);
-	vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkan->pipelineLayout, 0, 1, &descriptorSets[index], 0, nullptr);
-	vkCmdDrawIndexed(commandBuffer, (uint32_t)indices.size(), 1, 0, 0, 0);
-}
-
-//
-// FUNCIÓN: CAFigure::updateUniformBuffer(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
-//
-// PROPÓSITO: Actualiza las variables uniformes sobre una imagen del swapchain
-//
-void CASkeleton::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
-{
-	CATransform transform;
-	transform.MVP = projection * view * location;
-	transform.ModelViewMatrix = view * location;
-	transform.ViewMatrix = view;
-
-	void* tData;
-	vkMapMemory(vulkan->device, transformBuffersMemory[imageIndex], 0, sizeof(CATransform), 0, &tData);
-	memcpy(tData, &transform, sizeof(CATransform));
-	vkUnmapMemory(vulkan->device, transformBuffersMemory[imageIndex]);
-
-	void* lData;
-	vkMapMemory(vulkan->device, lightBuffersMemory[imageIndex], 0, sizeof(CALight), 0, &lData);
-	memcpy(lData, &light, sizeof(CALight));
-	vkUnmapMemory(vulkan->device, lightBuffersMemory[imageIndex]);
-
-	void* mData;
-	vkMapMemory(vulkan->device, materialBuffersMemory[imageIndex], 0, sizeof(CAMaterial), 0, &mData);
-	memcpy(mData, &material, sizeof(CAMaterial));
-	vkUnmapMemory(vulkan->device, materialBuffersMemory[imageIndex]);
-}
-
-//
-// FUNCIÓN: CAFigure::setLight(CALight l)
-//
-// PROPÓSITO: Asigna las propiedades de la luz que incide en la figura
-//
-void CASkeleton::setLight(CALight l)
-{
-	this->light = l;
-}
-
-//
-// FUNCIÓN: CAFigure::setMaterial(CAMaterial m)
-//
-// PROPÓSITO: Asigna las propiedades del material del que está formada la figura
-//
-void CASkeleton::setMaterial(CAMaterial m)
-{
-	this->material = m;
-}
-
-//
-// FUNCIÓN: CAFigure::resetLocation()
-//
-// PROPÓSITO: Resetea la matriz de localización (Model).
-//
 void CASkeleton::resetLocation()
 {
 	location = glm::mat4(1.0f);
+	pelvis->SetMatrix(location);
+	hip_l->SetMatrix(location);
+	hip_r->SetMatrix(location);
 }
 
-//
-// FUNCIÓN: CAFigure::setLocation()
-//
-// PROPÓSITO: Resetea la matriz de localización (Model).
-//
 void CASkeleton::setLocation(glm::mat4 m)
 {
 	location = glm::mat4(m);
+	pelvis->SetMatrix(location);
+	hip_l->SetMatrix(location);
+	hip_r->SetMatrix(location);
 }
 
-
-//
-// FUNCIÓN: CAFigure::translate(glm::vec3 t)
-//
-// PROPÓSITO: Añade un desplazamiento la matriz de localización (Model).
-//
 void CASkeleton::translate(glm::vec3 t)
 {
 	location = glm::translate(location, t);
+	pelvis->SetMatrix(location);
+	hip_l->SetMatrix(location);
+	hip_r->SetMatrix(location);
 }
 
-//
-// FUNCIÓN: CAFigure::rotate(float angle, glm::vec3 axis)
-//
-// PROPÓSITO: Añade una rotación la matriz de localización (Model).
-//
 void CASkeleton::rotate(float angle, glm::vec3 axis)
 {
 	location = glm::rotate(location, glm::radians(angle), axis);
+	pelvis->SetMatrix(location);
+	hip_l->SetMatrix(location);
+	hip_r->SetMatrix(location);
+}
+
+void CASkeleton::destroyBuffers(CAVulkanState* vulkan)
+{
+	pelvis->destroyBuffers(vulkan);
+	spine->destroyBuffers(vulkan);
+	neck->destroyBuffers(vulkan);
+	hip_l->destroyBuffers(vulkan);
+	leg_l->destroyBuffers(vulkan);
+	knee_l->destroyBuffers(vulkan);
+	ankle_l->destroyBuffers(vulkan);
+	hip_r->destroyBuffers(vulkan);
+	leg_r->destroyBuffers(vulkan);
+	knee_r->destroyBuffers(vulkan);
+	ankle_r->destroyBuffers(vulkan);
+	clavicle_l->destroyBuffers(vulkan);
+	shoulder_l->destroyBuffers(vulkan);
+	elbow_l->destroyBuffers(vulkan);
+	wrist_l->destroyBuffers(vulkan);
+	clavicle_r->destroyBuffers(vulkan);
+	shoulder_r->destroyBuffers(vulkan);
+	elbow_r->destroyBuffers(vulkan);
+	wrist_r->destroyBuffers(vulkan);
+}
+
+void CASkeleton::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, int index)
+{
+	pelvis->addCommands(vulkan, commandBuffer, index);
+	spine->addCommands(vulkan, commandBuffer, index);
+	neck->addCommands(vulkan, commandBuffer, index);
+	hip_l->addCommands(vulkan, commandBuffer, index);
+	leg_l->addCommands(vulkan, commandBuffer, index);
+	knee_l->addCommands(vulkan, commandBuffer, index);
+	ankle_l->addCommands(vulkan, commandBuffer, index);
+	hip_r->addCommands(vulkan, commandBuffer, index);
+	leg_r->addCommands(vulkan, commandBuffer, index);
+	knee_r->addCommands(vulkan, commandBuffer, index);
+	ankle_r->addCommands(vulkan, commandBuffer, index);
+	clavicle_l->addCommands(vulkan, commandBuffer, index);
+	shoulder_l->addCommands(vulkan, commandBuffer, index);
+	elbow_l->addCommands(vulkan, commandBuffer, index);
+	wrist_l->addCommands(vulkan, commandBuffer, index);
+	clavicle_r->addCommands(vulkan, commandBuffer, index);
+	shoulder_r->addCommands(vulkan, commandBuffer, index);
+	elbow_r->addCommands(vulkan, commandBuffer, index);
+	wrist_r->addCommands(vulkan, commandBuffer, index);
+}
+
+void CASkeleton::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
+{
+	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	spine->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	neck->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	hip_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	leg_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	knee_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	ankle_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	hip_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	leg_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	knee_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	ankle_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	clavicle_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	shoulder_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	elbow_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	wrist_l->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	clavicle_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	shoulder_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	elbow_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
+	wrist_r->updateDescriptorSets(vulkan, imageIndex, view, projection);
 }

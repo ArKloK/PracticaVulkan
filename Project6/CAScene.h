@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CAVulkanState.h"
-#include "Skeleton.h"
+#include "CASkeleton.h"
 #include "CAFigure.h"
 #include "CABalljoint.h"
 #include "Animation.h"
@@ -16,7 +16,7 @@ public:
 
 private:
 	CAFigure* ground;
-	Skeleton* skeleton;
+	CASkeleton* skeleton;
 	/*CAFigure* column;
 	CAFigure* cross;
 	CAFigure* pelvis;

@@ -40,7 +40,7 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	blueMat.Ks = glm::vec3(0.8f, 0.8f, 0.8f);
 	blueMat.Shininess = 16.0f;
 
-	skeleton = new Skeleton(vulkan);
+	skeleton = new CASkeleton(vulkan);
 	skeleton->resetLocation();
 	skeleton->translate(glm::vec3(0.0f, 1.05f, 0.0f));
 
