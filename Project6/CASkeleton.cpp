@@ -233,11 +233,15 @@ void CASkeleton::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffe
 
 void CASkeleton::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
+	anim->Animar_clavicle_l(this);
+	anim->Animar_clavicle_r(this);
+	//anim->Animar_hip_l(this);
+	//anim->Animar_hip_r(this);
 	anim->Animar_shoulder_l(this);
 	anim->Animar_shoulder_r(this);
 	anim->Animar_leg_l(this);
 	anim->Animar_leg_r(this);
-	Sleep(10);
+	Sleep(1);
 	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	spine->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	neck->updateDescriptorSets(vulkan, imageIndex, view, projection);
