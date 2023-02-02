@@ -9,8 +9,7 @@
 #include <windows.h> 
 
 
-class CASkeleton
-{
+class CASkeleton{
 private:
 	glm::mat4 location;
 	CABalljoint* pelvis;
@@ -32,6 +31,7 @@ private:
 	CABalljoint* leg_r;
 	CABalljoint* knee_r;
 	CABalljoint* ankle_r;
+	Animation* anim;
 	float angle;
 public:
 	CASkeleton(CAVulkanState* vulkan);

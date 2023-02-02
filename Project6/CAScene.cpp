@@ -44,57 +44,6 @@ CAScene::CAScene(CAVulkanState* vulkan)
 	skeleton->resetLocation();
 	skeleton->translate(glm::vec3(0.0f, 1.05f, 0.0f));
 
-	/*column = new CACylinder(2, 10, 0.05f, 0.5f);
-	column->createBuffers(vulkan);
-	column->translate(glm::vec3(0.0f, 1.5f, 0.0f));
-	column->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	column->setLight(light);
-	column->setMaterial(blueMat);
-
-	cross = new CACylinder(2, 10, 0.05f, 0.25f);
-	cross->createBuffers(vulkan);
-	cross->translate(glm::vec3(0.0f, 1.9f, 0.0f));
-	cross->rotate(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	cross->setLight(light);
-	cross->setMaterial(blueMat);
-
-	pelvis = new CACylinder(2, 10, 0.05f, 0.25f);
-	pelvis->createBuffers(vulkan);
-	pelvis->translate(glm::vec3(0.0f, 1, 0.0f));
-	pelvis->rotate(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	pelvis->setLight(light);
-	pelvis->setMaterial(blueMat);
-
-	armL = new CABalljoint(0.4f);
-	armL->createBuffers(vulkan);
-	armL->setLocation(glm::vec3(0.25f, 1.9f, 0.0f));
-	armL->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	armL->setLight(light);
-
-	foreArmL = new CABalljoint(0.4f);
-	foreArmL->createBuffers(vulkan);
-	armL->addChild(foreArmL);
-	foreArmL->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	foreArmL->setLight(light);
-
-	armR = new CABalljoint(0.4f);
-	armR->createBuffers(vulkan);
-	armR->setLocation(glm::vec3(-0.25f, 1.9f, 0.0f));
-	armR->setOrientation(glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	armR->setLight(light);
-
-	legL = new CABalljoint(0.8f);
-	legL->createBuffers(vulkan);
-	legL->setLocation(glm::vec3(0.25f, 1, 0.0f));
-	legL->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	legL->setLight(light);
-
-	legR = new CABalljoint(0.8f);
-	legR->createBuffers(vulkan);
-	legR->setLocation(glm::vec3(-0.25f, 1, 0.0f));
-	legR->setOrientation(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	legR->setLight(light);*/
-
 	angle = 0.0;
 }
 
@@ -107,14 +56,6 @@ CAScene::~CAScene()
 {
 	delete ground;
 	delete skeleton;
-	/*delete column;
-	delete cross;
-	delete armL;
-	delete foreArmL;
-	delete armR;
-	delete pelvis;
-	delete legL;
-	delete legR;*/
 }
 
 //
@@ -126,14 +67,6 @@ void CAScene::destroyBuffers(CAVulkanState* vulkan)
 {
 	ground->destroyBuffers(vulkan);
 	skeleton->destroyBuffers(vulkan);
-	/*column->destroyBuffers(vulkan);
-	cross->destroyBuffers(vulkan);
-	armL->destroyBuffers(vulkan);
-	armR->destroyBuffers(vulkan);
-	pelvis->destroyBuffers(vulkan);
-	legL->destroyBuffers(vulkan);
-	legR->destroyBuffers(vulkan);
-	foreArmL->destroyBuffers(vulkan);*/
 }
 
 //
@@ -145,14 +78,6 @@ void CAScene::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffer, 
 {
 	ground->addCommands(vulkan, commandBuffer, index);
 	skeleton->addCommands(vulkan, commandBuffer, index);
-	/*column->addCommands(vulkan, commandBuffer, index);
-	cross->addCommands(vulkan, commandBuffer, index);
-	armL->addCommands(vulkan, commandBuffer, index);
-	armR->addCommands(vulkan, commandBuffer, index);
-	pelvis->addCommands(vulkan, commandBuffer, index);
-	legL->addCommands(vulkan, commandBuffer, index);
-	legR->addCommands(vulkan, commandBuffer, index);
-	foreArmL->addCommands(vulkan, commandBuffer, index);*/
 }
 
 //
@@ -166,18 +91,4 @@ void CAScene::update(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view,
 
 	ground->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	skeleton->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	/*armL->setPose(0.0f, -angle, 0.0f);
-	foreArmL->setPose(angle, 0.0f, 0.0f);
-	legL->setPose(0.0f, angle, 0.0f);
-	legR->setPose(0.0f, -angle, 0.0f);
-
-	
-	column->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	cross->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	armL->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	armR->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	legL->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	legR->updateDescriptorSets(vulkan, imageIndex, view, projection);
-	foreArmL->updateDescriptorSets(vulkan, imageIndex, view, projection);*/
 }

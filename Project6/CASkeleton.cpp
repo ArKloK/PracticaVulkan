@@ -1,9 +1,11 @@
 #include "CASkeleton.h"
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Animation.h"
+using namespace std;
 
 CASkeleton::CASkeleton(CAVulkanState* vulkan) {
 
+	anim = new Animation();
 	CALight light = {};
 	light.Ldir = glm::normalize(glm::vec3(1.0f, -0.8f, -0.7f));
 	light.La = glm::vec3(0.2f, 0.2f, 0.2f);
@@ -37,14 +39,13 @@ CASkeleton::CASkeleton(CAVulkanState* vulkan) {
 				shoulder_l = new CABalljoint(0.35f);
 				shoulder_l->createBuffers(vulkan);
 				clavicle_l->addChild(shoulder_l);
-				shoulder_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				shoulder_l->setPose(45, 0, 0);
+				shoulder_l->setOrientation(glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				shoulder_l->setLight(light);
 
 					elbow_l = new CABalljoint(0.3f);
 					elbow_l->createBuffers(vulkan);
 					shoulder_l->addChild(elbow_l);
-					elbow_l->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					elbow_l->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 					elbow_l->setLight(light);
 
 						wrist_l = new CABalljoint(0.2f);
@@ -63,14 +64,13 @@ CASkeleton::CASkeleton(CAVulkanState* vulkan) {
 				shoulder_r = new CABalljoint(0.35f);
 				shoulder_r->createBuffers(vulkan);
 				clavicle_r->addChild(shoulder_r);
-				shoulder_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
-				shoulder_r->setPose(45, 0, 0);
+				shoulder_r->setOrientation(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				shoulder_r->setLight(light);
 
 					elbow_r = new CABalljoint(0.3f);
 					elbow_r->createBuffers(vulkan);
 					shoulder_r->addChild(elbow_r);
-					elbow_r->setOrientation(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					elbow_r->setOrientation(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 					elbow_r->setLight(light);
 
 						wrist_r = new CABalljoint(0.2f);
@@ -151,7 +151,6 @@ CASkeleton::~CASkeleton()
 	delete shoulder_r;
 	delete elbow_r;
 	delete wrist_r;
-
 }
 
 void CASkeleton::resetLocation()
@@ -234,6 +233,11 @@ void CASkeleton::addCommands(CAVulkanState* vulkan, VkCommandBuffer commandBuffe
 
 void CASkeleton::updateDescriptorSets(CAVulkanState* vulkan, uint32_t imageIndex, glm::mat4 view, glm::mat4 projection)
 {
+	anim->Animar_shoulder_l(this);
+	anim->Animar_shoulder_r(this);
+	anim->Animar_leg_l(this);
+	anim->Animar_leg_r(this);
+	Sleep(10);
 	pelvis->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	spine->updateDescriptorSets(vulkan, imageIndex, view, projection);
 	neck->updateDescriptorSets(vulkan, imageIndex, view, projection);

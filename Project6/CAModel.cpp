@@ -16,12 +16,14 @@ CAModel::CAModel(CAVulkanState* vulkan)
 {
 	this->vulkan = vulkan;
 
-	this->camera = new CACamera();
+	this->camera2 = new CACamera();
 	//Camara de lado
-	//this->camera->setPosition(glm::vec3(12.0f, 1.0f, 0.0f));
-	//this->camera->setDirection(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	this->camera2->setPosition(glm::vec3(12.0f, 1.0f, 0.0f));
+	this->camera2->setDirection(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	this->camera2->setMoveStep(0.0f);
 
 	//Camara frontal
+	this->camera = new CACamera();
 	this->camera->setPosition(glm::vec3(0.0f, 1.0f, 10.0f));
 	this->camera->setMoveStep(0.0f);
 
@@ -38,6 +40,7 @@ CAModel::~CAModel()
 	scene->destroyBuffers(vulkan);
 	delete scene;
 	delete camera;
+	delete camera2;
 }
 
 //
@@ -135,6 +138,8 @@ void CAModel::key_pressed(int key)
 	case GLFW_KEY_L:
 		camera->turnRight();
 		break;
+	//case GLFW_KEY_C:
+
 	}
 }
 

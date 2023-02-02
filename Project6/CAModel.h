@@ -14,6 +14,7 @@ private:
 
 	CAScene* scene;
 	CACamera* camera;
+	CACamera* camera2;
 
 public:
 	CAModel(CAVulkanState* vulkan);
