@@ -18,12 +18,6 @@ Animation::Animation() {
 	kf_shoulder_r[1] = 0;
 	kf_shoulder_r[2] = -60;
 
-	kf_hip_l[0] = 6;
-	kf_hip_l[1] = -6;
-
-	kf_hip_r[0] = 6;
-	kf_hip_r[1] = -6;
-
 	kf_leg_l[0] = 60;
 	kf_leg_l[1] = 0;
 	kf_leg_l[2] = -60;
@@ -38,20 +32,26 @@ Animation::Animation() {
 	shoulder_l_angles = 0.0f;
 	elbow_r_angles = 0.0f;
 	elbow_l_angles = 0.0f;
-	hip_l_angles = 0.0f;
-	hip_r_angles = 0.0f;
 	leg_r_angles = 0.0f;
 	leg_l_angles = 0.0f;
 	knee_r_angles = 0.0f;
 	knee_l_angles = 10.0f;
 
-	topeHipL = false;
-	topeHipR = false;
 	topeClavicleL = false;
 	topeClavicleR = false;
 	topeLegL = false;
 	topeLegR = false;
 	empiezaExtension = false;
+}
+
+void Animation::Animar(void* skl)
+{
+	Animar_clavicle_l(skl);
+	Animar_clavicle_r(skl);
+	Animar_shoulder_l(skl);
+	Animar_shoulder_r(skl);
+	Animar_leg_l(skl);
+	Animar_leg_r(skl);
 }
 
 void Animation::Animar_clavicle_l(void* skl) {
@@ -191,28 +191,6 @@ void Animation::Animar_elbow_r(void* skl, bool tope)
 	sk->getelbow_r()->setPose(0, elbow_r_angles, 0);
 }
 
-void Animation::Animar_hip_l(void* skl) {
-	if (topeHipL == false)
-	{//Rota hacia delante
-		hip_l_angles += 0.1;
-		if ((int)hip_l_angles == kf_hip_l[0])
-		{
-			topeHipL = true;
-		}
-	}
-	else if (topeHipL == true) {//Rota hacia detras
-		//cout << "ENTRA";
-		hip_l_angles -= 0.1;
-		if ((int)hip_l_angles == kf_hip_l[1])
-		{
-			topeHipL = false;
-		}
-	}
-	//cout << hip_l_angles << "IGUAL a " << kf_hip_l[0] << "\n";
-	CASkeleton* sk = (CASkeleton*)skl;
-	sk->gethip_l()->setPose(0, hip_l_angles, 0);
-}
-
 //Animacion hacia atras
 void Animation::Animar_leg_l(void* skl)
 {
@@ -253,28 +231,6 @@ void Animation::Animar_knee_l(void* skl, bool tope)
 	sk->getknee_l()->setPose(knee_l_angles, 0, 0);
 }
 
-void Animation::Animar_hip_r(void* skl) {
-	if (topeHipR == false)
-	{//Rota hacia delante
-		hip_r_angles += 0.1;
-		
-		if ((int)hip_r_angles == kf_hip_r[0])
-		{
-			topeHipR = true;
-		}
-	}
-	else if (topeHipR == true) {//Rota hacia detras
-		hip_r_angles -= 0.1;
-		if ((int)hip_r_angles == kf_hip_r[1])
-		{
-			topeHipR = false;
-		}
-	}
-	CASkeleton* sk = (CASkeleton*)skl;
-	cout << hip_r_angles << "\n";
-	sk->gethip_r()->setPose(0, hip_r_angles, 0);
-}
-
 //Animacion hacia delante
 void Animation::Animar_leg_r(void* skl)
 {
@@ -307,7 +263,6 @@ void Animation::Animar_leg_r(void* skl)
 			empiezaContraccion = true;
 		}
 	}
-
 	Animar_knee_r(sk, empiezaExtension, empiezaContraccion);
 	sk->getleg_r()->setPose(leg_r_angles, 0, 0);
 }
@@ -324,7 +279,6 @@ void Animation::Animar_knee_r(void* skl, bool extension, bool contraccion)
 		//cout << "\nZONA CONTRACCION contraccion:" << contraccion << " extension: " << extension;
 		knee_r_angles++;
 	}
-
 	CASkeleton* sk = (CASkeleton*)skl;
 	sk->getknee_r()->setPose(knee_r_angles, 0, 0);
 }

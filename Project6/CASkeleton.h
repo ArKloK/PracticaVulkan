@@ -32,7 +32,6 @@ private:
 	CABalljoint* knee_r;
 	CABalljoint* ankle_r;
 	Animation* anim;
-	float angle;
 public:
 	CASkeleton(CAVulkanState* vulkan);
 	~CASkeleton();
@@ -43,10 +42,8 @@ public:
 	CABalljoint* getclavicle_r() { return clavicle_r; };
 	CABalljoint* getshoulder_r() { return shoulder_r; };
 	CABalljoint* getelbow_r() { return elbow_r; }; 
-	CABalljoint* gethip_l() { return hip_l; };
 	CABalljoint* getleg_l() { return leg_l; };
 	CABalljoint* getknee_l() { return knee_l; };
-	CABalljoint* gethip_r() { return hip_r; };
 	CABalljoint* getleg_r() { return leg_r; };
 	CABalljoint* getknee_r() { return knee_r; };
 

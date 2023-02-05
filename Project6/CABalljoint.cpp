@@ -117,7 +117,6 @@ void CABalljoint::ComputeMatrix()
 }
 
 void CABalljoint::SetMatrix(glm::mat4 matrix) {
-	
 	matrizpadre = matrix;
 	ComputeMatrix();
 }
